@@ -15,6 +15,17 @@
       rel="stylesheet"
     />
     <title>Free Image Converter — Conversor de Imagens Grátis</title>
+    <script>
+      (function () {
+        var stored = localStorage.getItem('theme')
+        var theme =
+          stored === 'dark' || stored === 'system' || stored === 'light' ? stored : 'light'
+        var dark =
+          theme === 'dark' ||
+          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.documentElement.classList.add('dark')
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -8,6 +8,9 @@ type FileDropzoneProps = {
   acceptedFormats: string
 }
 
+const sectionClass =
+  'rounded-2xl border border-zinc-200 bg-white/80 p-6 dark:border-zinc-800 dark:bg-zinc-900/60'
+
 export function FileDropzone({ onFilesAdded, disabled, acceptedFormats }: FileDropzoneProps) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -39,11 +42,11 @@ export function FileDropzone({ onFilesAdded, disabled, acceptedFormats }: FileDr
   }
 
   return (
-    <section className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6">
-      <h2 className="mb-1 text-sm font-medium uppercase tracking-wider text-zinc-400">
+    <section className={sectionClass}>
+      <h2 className="mb-1 text-sm font-medium uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
         {t('dropzone.title')}
       </h2>
-      <p className="mb-4 text-sm text-zinc-500">
+      <p className="mb-4 text-sm text-zinc-600 dark:text-zinc-500">
         {t('dropzone.description', { formats: acceptedFormats })}
       </p>
 
@@ -62,11 +65,11 @@ export function FileDropzone({ onFilesAdded, disabled, acceptedFormats }: FileDr
           disabled ? 'cursor-not-allowed opacity-50' : '',
           isDragging
             ? 'border-violet-400 bg-violet-500/10'
-            : 'border-zinc-700 bg-zinc-800/30 hover:border-zinc-600 hover:bg-zinc-800/50',
+            : 'border-zinc-300 bg-zinc-50/80 hover:border-zinc-400 hover:bg-zinc-100/80 dark:border-zinc-700 dark:bg-zinc-800/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50',
         ].join(' ')}
       >
         <svg
-          className="mb-4 h-12 w-12 text-zinc-500"
+          className="mb-4 h-12 w-12 text-zinc-400 dark:text-zinc-500"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -79,8 +82,10 @@ export function FileDropzone({ onFilesAdded, disabled, acceptedFormats }: FileDr
             d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
           />
         </svg>
-        <p className="text-center text-zinc-300">
-          <span className="font-medium text-violet-400">{t('dropzone.clickToUpload')}</span>{' '}
+        <p className="text-center text-zinc-700 dark:text-zinc-300">
+          <span className="font-medium text-violet-600 dark:text-violet-400">
+            {t('dropzone.clickToUpload')}
+          </span>{' '}
           {t('dropzone.orDragHere')}
         </p>
         <p className="mt-2 text-xs text-zinc-500">{t('dropzone.multipleHint')}</p>

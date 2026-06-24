@@ -56,5 +56,11 @@
     "label": "Language",
     "pt-BR": "Português",
     "en": "English"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Automatic"
   }
 }
