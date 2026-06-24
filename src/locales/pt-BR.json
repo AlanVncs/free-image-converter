@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "Free Image Converter — Conversor de Imagens Grátis",
+    "description": "Free Image Converter — converta imagens entre PNG, AVIF, JPG e WEBP diretamente no navegador, sem custo."
+  },
+  "header": {
+    "badge": "100% no navegador — seus arquivos não saem do seu dispositivo",
+    "title": "Free Image <1>Converter</1>",
+    "subtitle": "Converta imagens entre PNG, AVIF, JPG e WEBP de forma gratuita, rápida e privada."
+  },
+  "formatSelector": {
+    "title": "Formato de destino",
+    "description": "Selecione o formato para o qual suas imagens serão convertidas."
+  },
+  "dropzone": {
+    "title": "Imagens de origem",
+    "description": "Arraste arquivos ou clique para selecionar. Formatos aceitos: PNG, AVIF, JPG e WEBP.",
+    "clickToUpload": "Clique para enviar",
+    "orDragHere": "ou arraste imagens aqui",
+    "multipleHint": "Você pode adicionar vários arquivos de uma vez"
+  },
+  "files": {
+    "title": "Arquivos ({{count}})",
+    "clearAll": "Limpar tudo",
+    "download": "Baixar",
+    "remove": "Remover {{name}}",
+    "status": {
+      "pending": "Aguardando",
+      "converting": "Convertendo…",
+      "done": "Pronto",
+      "error": "Erro"
+    }
+  },
+  "actions": {
+    "converting": "Convertendo…",
+    "convert": "Converter",
+    "convertWithCount": "Converter ({{count}})",
+    "downloadFile": "Baixar arquivo",
+    "downloadAllZip": "Baixar todos (ZIP)"
+  },
+  "footer": {
+    "privacy": "Nenhum dado é enviado a servidores. Toda a conversão ocorre localmente no seu navegador."
+  },
+  "errors": {
+    "unsupportedFiles": "Alguns arquivos foram ignorados por não serem um formato suportado.",
+    "unknown": "Erro desconhecido.",
+    "canvasContext": "Não foi possível criar o contexto do canvas.",
+    "avifUnsupported": "Seu navegador não suporta conversão para AVIF. Tente outro formato ou atualize o navegador.",
+    "conversionFailed": "Falha ao converter a imagem."
+  },
+  "download": {
+    "zipFilename": "imagens-convertidas.{{extension}}.zip"
+  },
+  "language": {
+    "label": "Idioma",
+    "pt-BR": "Português",
+    "en": "English"
+  }
+}

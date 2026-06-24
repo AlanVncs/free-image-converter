@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "Free Image Converter — Free Online Image Converter",
+    "description": "Free Image Converter — convert images between PNG, AVIF, JPG and WEBP directly in your browser, for free."
+  },
+  "header": {
+    "badge": "100% in the browser — your files never leave your device",
+    "title": "Free Image <1>Converter</1>",
+    "subtitle": "Convert images between PNG, AVIF, JPG and WEBP for free, quickly and privately."
+  },
+  "formatSelector": {
+    "title": "Target format",
+    "description": "Select the format your images will be converted to."
+  },
+  "dropzone": {
+    "title": "Source images",
+    "description": "Drag files or click to select. Accepted formats: PNG, AVIF, JPG and WEBP.",
+    "clickToUpload": "Click to upload",
+    "orDragHere": "or drag images here",
+    "multipleHint": "You can add multiple files at once"
+  },
+  "files": {
+    "title": "Files ({{count}})",
+    "clearAll": "Clear all",
+    "download": "Download",
+    "remove": "Remove {{name}}",
+    "status": {
+      "pending": "Waiting",
+      "converting": "Converting…",
+      "done": "Done",
+      "error": "Error"
+    }
+  },
+  "actions": {
+    "converting": "Converting…",
+    "convert": "Convert",
+    "convertWithCount": "Convert ({{count}})",
+    "downloadFile": "Download file",
+    "downloadAllZip": "Download all (ZIP)"
+  },
+  "footer": {
+    "privacy": "No data is sent to servers. All conversion happens locally in your browser."
+  },
+  "errors": {
+    "unsupportedFiles": "Some files were ignored because they are not a supported format.",
+    "unknown": "Unknown error.",
+    "canvasContext": "Could not create canvas context.",
+    "avifUnsupported": "Your browser does not support AVIF conversion. Try another format or update your browser.",
+    "conversionFailed": "Failed to convert the image."
+  },
+  "download": {
+    "zipFilename": "converted-images.{{extension}}.zip"
+  },
+  "language": {
+    "label": "Language",
+    "pt-BR": "Português",
+    "en": "English"
+  }
+}
