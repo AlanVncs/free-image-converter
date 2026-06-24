@@ -4,9 +4,25 @@
     "description": "Free Image Converter — converta imagens para {{formats}} diretamente no navegador, sem custo."
   },
   "header": {
-    "badge": "100% no navegador — seus arquivos não saem do seu dispositivo",
-    "title": "Free Image <1>Converter</1>",
-    "subtitle": "Converta imagens para {{formats}} de forma gratuita, rápida e privada."
+    "title": "Free Image Converter",
+    "features": {
+      "simple": {
+        "label": "Simples",
+        "hint": "Arraste as imagens, escolha o formato e converta — sem complicação."
+      },
+      "fast": {
+        "label": "Rápido",
+        "hint": "Conversão instantânea no navegador, sem esperar upload."
+      },
+      "free": {
+        "label": "Grátis",
+        "hint": "Sem cadastro, sem limites e sem custo."
+      },
+      "secure": {
+        "label": "100% seguro",
+        "hint": "Seus arquivos não saem do seu dispositivo — tudo acontece localmente."
+      }
+    }
   },
   "formatSelector": {
     "title": "Formato de destino",
