@@ -1,4 +1,6 @@
-export type ImageFormat = 'png' | 'avif' | 'jpg' | 'webp'
+export type OutputFormat = 'png' | 'jpg' | 'webp' | 'avif' | 'gif' | 'bmp' | 'ico'
+
+export type InputFormat = OutputFormat | 'svg' | 'heic'
 
 export type ImageFile = {
   id: string

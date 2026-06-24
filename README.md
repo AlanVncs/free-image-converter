@@ -4,7 +4,10 @@ Conversor de imagens gratuito que roda inteiramente no navegador. Nenhum arquivo
 
 ## Formatos suportados
 
-- **Entrada e saída:** PNG, AVIF, JPG, WEBP
+- **Saída (conversão):** PNG, JPG, WEBP, AVIF, GIF, BMP e ICO
+- **Entrada:** PNG, JPG, WEBP, AVIF, GIF, BMP, ICO, SVG e HEIC
+
+GIFs animados usam apenas o primeiro frame na conversão. ICO redimensiona automaticamente para no máximo 256px. HEIC usa decodificação nativa do navegador ou `heic2any` quando necessário.
 
 ## Desenvolvimento
 

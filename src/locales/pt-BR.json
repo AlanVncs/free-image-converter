@@ -1,12 +1,12 @@
 {
   "meta": {
     "title": "Free Image Converter — Conversor de Imagens Grátis",
-    "description": "Free Image Converter — converta imagens entre PNG, AVIF, JPG e WEBP diretamente no navegador, sem custo."
+    "description": "Free Image Converter — converta imagens para {{formats}} diretamente no navegador, sem custo."
   },
   "header": {
     "badge": "100% no navegador — seus arquivos não saem do seu dispositivo",
     "title": "Free Image <1>Converter</1>",
-    "subtitle": "Converta imagens entre PNG, AVIF, JPG e WEBP de forma gratuita, rápida e privada."
+    "subtitle": "Converta imagens para {{formats}} de forma gratuita, rápida e privada."
   },
   "formatSelector": {
     "title": "Formato de destino",
@@ -14,7 +14,7 @@
   },
   "dropzone": {
     "title": "Imagens de origem",
-    "description": "Arraste arquivos ou clique para selecionar. Formatos aceitos: PNG, AVIF, JPG e WEBP.",
+    "description": "Arraste arquivos ou clique para selecionar. Formatos aceitos: {{formats}}.",
     "clickToUpload": "Clique para enviar",
     "orDragHere": "ou arraste imagens aqui",
     "multipleHint": "Você pode adicionar vários arquivos de uma vez"
@@ -46,7 +46,8 @@
     "unknown": "Erro desconhecido.",
     "canvasContext": "Não foi possível criar o contexto do canvas.",
     "avifUnsupported": "Seu navegador não suporta conversão para AVIF. Tente outro formato ou atualize o navegador.",
-    "conversionFailed": "Falha ao converter a imagem."
+    "conversionFailed": "Falha ao converter a imagem.",
+    "heicDecodeFailed": "Não foi possível ler o arquivo HEIC. Tente outro navegador ou converta o arquivo antes de enviar."
   },
   "download": {
     "zipFilename": "imagens-convertidas.{{extension}}.zip"

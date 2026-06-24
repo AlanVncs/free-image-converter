@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import type { ImageFile } from '../types/image'
 import { getFormatById } from '../lib/formats'
-import type { ImageFormat } from '../types/image'
+import type { OutputFormat } from '../types/image'
 import { downloadBlob } from '../lib/convertImage'
 import { replaceExtension } from '../lib/formats'
 
 type FileListProps = {
   files: ImageFile[]
-  targetFormat: ImageFormat
+  targetFormat: OutputFormat
   onRemove: (id: string) => void
   onClear: () => void
 }

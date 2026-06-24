@@ -5,9 +5,10 @@ import { getAcceptString } from '../lib/formats'
 type FileDropzoneProps = {
   onFilesAdded: (files: File[]) => void
   disabled?: boolean
+  acceptedFormats: string
 }
 
-export function FileDropzone({ onFilesAdded, disabled }: FileDropzoneProps) {
+export function FileDropzone({ onFilesAdded, disabled, acceptedFormats }: FileDropzoneProps) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -42,7 +43,9 @@ export function FileDropzone({ onFilesAdded, disabled }: FileDropzoneProps) {
       <h2 className="mb-1 text-sm font-medium uppercase tracking-wider text-zinc-400">
         {t('dropzone.title')}
       </h2>
-      <p className="mb-4 text-sm text-zinc-500">{t('dropzone.description')}</p>
+      <p className="mb-4 text-sm text-zinc-500">
+        {t('dropzone.description', { formats: acceptedFormats })}
+      </p>
 
       <div
         role="button"

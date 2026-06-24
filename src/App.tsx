@@ -6,9 +6,17 @@ import { FileDropzone } from './components/FileDropzone'
 import { FileList } from './components/FileList'
 import { LanguageSwitcher } from './components/LanguageSwitcher'
 import { useDocumentMeta } from './hooks/useDocumentMeta'
-import type { ImageFile, ImageFormat } from './types/image'
+import type { ImageFile, OutputFormat } from './types/image'
 import { convertImage, downloadBlob } from './lib/convertImage'
-import { getFormatById, isSupportedFile, replaceExtension } from './lib/formats'
+import { createPreviewUrl } from './lib/decodeImage'
+import {
+  FORMATS,
+  getFormatById,
+  getFormatLabels,
+  isSupportedFile,
+  OUTPUT_FORMATS,
+  replaceExtension,
+} from './lib/formats'
 
 function createId(): string {
   return crypto.randomUUID()
@@ -18,24 +26,28 @@ export default function App() {
   const { t } = useTranslation()
   useDocumentMeta()
 
-  const [targetFormat, setTargetFormat] = useState<ImageFormat>('png')
+  const [targetFormat, setTargetFormat] = useState<OutputFormat>('png')
+  const outputFormatLabels = getFormatLabels(OUTPUT_FORMATS)
+  const inputFormatLabels = getFormatLabels(FORMATS)
   const [files, setFiles] = useState<ImageFile[]>([])
   const [isConverting, setIsConverting] = useState(false)
 
   const addFiles = useCallback(
-    (incoming: File[]) => {
+    async (incoming: File[]) => {
       const valid = incoming.filter(isSupportedFile)
       if (valid.length < incoming.length) {
         alert(t('errors.unsupportedFiles'))
       }
       if (valid.length === 0) return
 
-      const newItems: ImageFile[] = valid.map((file) => ({
-        id: createId(),
-        file,
-        previewUrl: URL.createObjectURL(file),
-        status: 'pending',
-      }))
+      const newItems: ImageFile[] = await Promise.all(
+        valid.map(async (file) => ({
+          id: createId(),
+          file,
+          previewUrl: await createPreviewUrl(file),
+          status: 'pending' as const,
+        })),
+      )
 
       setFiles((prev) => [...prev, ...newItems])
     },
@@ -147,12 +159,18 @@ export default function App() {
               components={{ 1: <span className="text-violet-400" /> }}
             />
           </h1>
-          <p className="mt-2 text-zinc-400">{t('header.subtitle')}</p>
+          <p className="mt-2 text-zinc-400">
+            {t('header.subtitle', { formats: outputFormatLabels })}
+          </p>
         </header>
 
         <main className="space-y-6">
           <FormatSelector value={targetFormat} onChange={setTargetFormat} />
-          <FileDropzone onFilesAdded={addFiles} disabled={isConverting} />
+          <FileDropzone
+            onFilesAdded={addFiles}
+            disabled={isConverting}
+            acceptedFormats={inputFormatLabels}
+          />
           <FileList
             files={files}
             targetFormat={targetFormat}

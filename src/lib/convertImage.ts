@@ -1,16 +1,10 @@
 import i18n from '../i18n'
-import { getFormatById } from './formats'
-import type { ImageFormat } from '../types/image'
+import { loadImageBitmap } from './decodeImage'
+import { encodeCanvas } from './encodeImage'
+import type { OutputFormat } from '../types/image'
 
-const LOSSY_FORMATS = new Set<ImageFormat>(['jpg', 'webp', 'avif'])
-const DEFAULT_QUALITY = 0.92
-
-export async function convertImage(
-  file: File,
-  targetFormat: ImageFormat,
-): Promise<Blob> {
-  const format = getFormatById(targetFormat)
-  const bitmap = await createImageBitmap(file)
+export async function convertImage(file: File, targetFormat: OutputFormat): Promise<Blob> {
+  const bitmap = await loadImageBitmap(file)
 
   try {
     const canvas = document.createElement('canvas')
@@ -22,30 +16,22 @@ export async function convertImage(
 
     ctx.drawImage(bitmap, 0, 0)
 
-    const quality = LOSSY_FORMATS.has(targetFormat) ? DEFAULT_QUALITY : undefined
-    const blob = await canvasToBlob(canvas, format.mime, quality)
-
-    if (!blob) {
-      if (targetFormat === 'avif') {
-        throw new Error(i18n.t('errors.avifUnsupported'))
+    try {
+      return await encodeCanvas(canvas, targetFormat)
+    } catch (err) {
+      if (err instanceof Error) {
+        if (err.message === 'avif-unsupported') {
+          throw new Error(i18n.t('errors.avifUnsupported'))
+        }
+        if (err.message === 'conversion-failed') {
+          throw new Error(i18n.t('errors.conversionFailed'))
+        }
       }
-      throw new Error(i18n.t('errors.conversionFailed'))
+      throw err
     }
-
-    return blob
   } finally {
     bitmap.close()
   }
-}
-
-function canvasToBlob(
-  canvas: HTMLCanvasElement,
-  mime: string,
-  quality?: number,
-): Promise<Blob | null> {
-  return new Promise((resolve) => {
-    canvas.toBlob(resolve, mime, quality)
-  })
 }
 
 export function downloadBlob(blob: Blob, filename: string): void {

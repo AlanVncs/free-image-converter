@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import type { ImageFormat } from '../types/image'
-import { FORMATS } from '../lib/formats'
+import type { OutputFormat } from '../types/image'
+import { OUTPUT_FORMATS } from '../lib/formats'
 
 type FormatSelectorProps = {
-  value: ImageFormat
-  onChange: (format: ImageFormat) => void
+  value: OutputFormat
+  onChange: (format: OutputFormat) => void
 }
 
 export function FormatSelector({ value, onChange }: FormatSelectorProps) {
@@ -16,8 +16,8 @@ export function FormatSelector({ value, onChange }: FormatSelectorProps) {
         {t('formatSelector.title')}
       </h2>
       <p className="mb-4 text-sm text-zinc-500">{t('formatSelector.description')}</p>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {FORMATS.map((format) => {
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        {OUTPUT_FORMATS.map((format) => {
           const selected = value === format.id
           return (
             <button
