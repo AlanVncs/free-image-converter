@@ -23,11 +23,13 @@
     "title": "Files ({{count}})",
     "clearAll": "Clear all",
     "download": "Download",
+    "downloadItem": "Download {{name}}",
     "remove": "Remove {{name}}",
     "status": {
-      "pending": "Waiting",
+      "loading": "Loading image",
+      "ready": "Ready to convert",
       "converting": "Converting…",
-      "done": "Done",
+      "done": "Conversion complete",
       "error": "Error"
     }
   },
@@ -47,7 +49,8 @@
     "canvasContext": "Could not create canvas context.",
     "avifUnsupported": "Your browser does not support AVIF conversion. Try another format or update your browser.",
     "conversionFailed": "Failed to convert the image.",
-    "heicDecodeFailed": "Could not read the HEIC file. Try another browser or convert the file before uploading."
+    "heicDecodeFailed": "Could not read the HEIC file. Try another browser or convert the file before uploading.",
+    "previewFailed": "Could not load the image preview."
   },
   "download": {
     "zipFilename": "converted-images.{{extension}}.zip"

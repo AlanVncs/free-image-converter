@@ -7,15 +7,18 @@ import { FileList } from './components/FileList'
 import { AppToolbar } from './components/AppToolbar'
 import { useDocumentMeta } from './hooks/useDocumentMeta'
 import type { ImageFile, OutputFormat } from './types/image'
-import { convertImage, downloadBlob } from './lib/convertImage'
+import { convertImage } from './lib/convertImage'
 import { createPreviewUrl } from './lib/decodeImage'
+import {
+  buildUniqueFilenames,
+  downloadBlob,
+} from './lib/downloadFiles'
 import {
   FORMATS,
   getFormatById,
   getFormatLabels,
   isSupportedFile,
   OUTPUT_FORMATS,
-  replaceExtension,
 } from './lib/formats'
 
 function createId(): string {
@@ -40,16 +43,34 @@ export default function App() {
       }
       if (valid.length === 0) return
 
-      const newItems: ImageFile[] = await Promise.all(
-        valid.map(async (file) => ({
-          id: createId(),
-          file,
-          previewUrl: await createPreviewUrl(file),
-          status: 'pending' as const,
-        })),
-      )
+      const placeholders: ImageFile[] = valid.map((file) => ({
+        id: createId(),
+        file,
+        previewUrl: '',
+        status: 'loading',
+      }))
 
-      setFiles((prev) => [...prev, ...newItems])
+      setFiles((prev) => [...prev, ...placeholders])
+
+      await Promise.all(
+        placeholders.map(async (placeholder) => {
+          try {
+            const previewUrl = await createPreviewUrl(placeholder.file)
+            setFiles((prev) =>
+              prev.map((f) =>
+                f.id === placeholder.id ? { ...f, previewUrl, status: 'ready', error: undefined } : f,
+              ),
+            )
+          } catch (err) {
+            const message = err instanceof Error ? err.message : t('errors.previewFailed')
+            setFiles((prev) =>
+              prev.map((f) =>
+                f.id === placeholder.id ? { ...f, status: 'error', error: message } : f,
+              ),
+            )
+          }
+        }),
+      )
     },
     [t],
   )
@@ -57,14 +78,16 @@ export default function App() {
   const removeFile = useCallback((id: string) => {
     setFiles((prev) => {
       const item = prev.find((f) => f.id === id)
-      if (item) URL.revokeObjectURL(item.previewUrl)
+      if (item?.previewUrl) URL.revokeObjectURL(item.previewUrl)
       return prev.filter((f) => f.id !== id)
     })
   }, [])
 
   const clearFiles = useCallback(() => {
     setFiles((prev) => {
-      prev.forEach((f) => URL.revokeObjectURL(f.previewUrl))
+      prev.forEach((f) => {
+        if (f.previewUrl) URL.revokeObjectURL(f.previewUrl)
+      })
       return []
     })
   }, [])
@@ -74,17 +97,19 @@ export default function App() {
 
   useEffect(() => {
     return () => {
-      filesRef.current.forEach((f) => URL.revokeObjectURL(f.previewUrl))
+      filesRef.current.forEach((f) => {
+        if (f.previewUrl) URL.revokeObjectURL(f.previewUrl)
+      })
     }
   }, [])
 
   const convertAll = async () => {
-    const pending = files.filter((f) => f.status === 'pending' || f.status === 'error')
-    if (pending.length === 0) return
+    const queue = files.filter((f) => f.status === 'ready' || f.status === 'error')
+    if (queue.length === 0) return
 
     setIsConverting(true)
 
-    for (const item of pending) {
+    for (const item of queue) {
       setFiles((prev) =>
         prev.map((f) => (f.id === item.id ? { ...f, status: 'converting', error: undefined } : f)),
       )
@@ -112,36 +137,32 @@ export default function App() {
     if (done.length === 0) return
 
     const extension = getFormatById(targetFormat).extension
+    const downloadItems = buildUniqueFilenames(
+      done.map((item) => ({
+        blob: item.convertedBlob!,
+        originalName: item.file.name,
+        extension,
+      })),
+    )
 
     if (done.length === 1) {
-      downloadBlob(
-        done[0].convertedBlob!,
-        replaceExtension(done[0].file.name, extension),
-      )
+      downloadBlob(downloadItems[0].blob, downloadItems[0].filename)
       return
     }
 
     const zip = new JSZip()
-    const usedNames = new Set<string>()
-
-    for (const item of done) {
-      let name = replaceExtension(item.file.name, extension)
-      if (usedNames.has(name)) {
-        const base = name.replace(/\.[^.]+$/, '')
-        let counter = 2
-        while (usedNames.has(`${base}-${counter}.${extension}`)) counter++
-        name = `${base}-${counter}.${extension}`
-      }
-      usedNames.add(name)
-      zip.file(name, item.convertedBlob!)
+    for (const { blob, filename } of downloadItems) {
+      zip.file(filename, blob)
     }
-
     const zipBlob = await zip.generateAsync({ type: 'blob' })
     downloadBlob(zipBlob, t('download.zipFilename', { extension }))
   }
 
-  const pendingCount = files.filter((f) => f.status === 'pending' || f.status === 'error').length
+  const readyCount = files.filter((f) => f.status === 'ready' || f.status === 'error').length
   const doneCount = files.filter((f) => f.status === 'done').length
+  const canDownloadAll = doneCount > 0
+  const downloadAllLabel =
+    doneCount === 1 ? t('actions.downloadFile') : t('actions.downloadAllZip')
 
   return (
     <>
@@ -183,29 +204,31 @@ export default function App() {
               <button
                 type="button"
                 onClick={convertAll}
-                disabled={isConverting || pendingCount === 0}
+                disabled={isConverting || readyCount === 0}
                 className="rounded-xl bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isConverting
                   ? t('actions.converting')
-                  : pendingCount > 0
-                    ? t('actions.convertWithCount', { count: pendingCount })
+                  : readyCount > 0
+                    ? t('actions.convertWithCount', { count: readyCount })
                     : t('actions.convert')}
               </button>
-              {doneCount > 0 && (
+              {canDownloadAll && (
                 <button
                   type="button"
                   onClick={downloadAll}
                   className="rounded-xl border border-zinc-300 bg-zinc-100 px-6 py-3 text-sm font-semibold text-zinc-800 transition-colors hover:border-zinc-400 hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700"
                 >
-                  {doneCount > 1 ? t('actions.downloadAllZip') : t('actions.downloadFile')}
+                  {downloadAllLabel}
                 </button>
               )}
             </div>
           )}
         </main>
 
-        <footer className="mt-16 text-center text-xs text-zinc-500 dark:text-zinc-600">{t('footer.privacy')}</footer>
+        <footer className="mt-16 text-center text-xs text-zinc-500 dark:text-zinc-600">
+          {t('footer.privacy')}
+        </footer>
       </div>
     </>
   )

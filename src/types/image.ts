@@ -2,11 +2,13 @@ export type OutputFormat = 'png' | 'jpg' | 'webp' | 'avif' | 'gif' | 'bmp' | 'ic
 
 export type InputFormat = OutputFormat | 'svg' | 'heic'
 
+export type ImageFileStatus = 'loading' | 'ready' | 'converting' | 'done' | 'error'
+
 export type ImageFile = {
   id: string
   file: File
   previewUrl: string
-  status: 'pending' | 'converting' | 'done' | 'error'
+  status: ImageFileStatus
   convertedBlob?: Blob
   error?: string
 }

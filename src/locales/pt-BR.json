@@ -23,11 +23,13 @@
     "title": "Arquivos ({{count}})",
     "clearAll": "Limpar tudo",
     "download": "Baixar",
+    "downloadItem": "Baixar {{name}}",
     "remove": "Remover {{name}}",
     "status": {
-      "pending": "Aguardando",
+      "loading": "Carregando imagem",
+      "ready": "Pronto para conversão",
       "converting": "Convertendo…",
-      "done": "Pronto",
+      "done": "Conversão concluída",
       "error": "Erro"
     }
   },
@@ -47,7 +49,8 @@
     "canvasContext": "Não foi possível criar o contexto do canvas.",
     "avifUnsupported": "Seu navegador não suporta conversão para AVIF. Tente outro formato ou atualize o navegador.",
     "conversionFailed": "Falha ao converter a imagem.",
-    "heicDecodeFailed": "Não foi possível ler o arquivo HEIC. Tente outro navegador ou converta o arquivo antes de enviar."
+    "heicDecodeFailed": "Não foi possível ler o arquivo HEIC. Tente outro navegador ou converta o arquivo antes de enviar.",
+    "previewFailed": "Não foi possível carregar a pré-visualização da imagem."
   },
   "download": {
     "zipFilename": "imagens-convertidas.{{extension}}.zip"
