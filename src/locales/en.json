@@ -8,7 +8,7 @@
     "features": {
       "simple": {
         "label": "Simple",
-        "hint": "Drop your images, pick a format, and convert — no fuss."
+        "hint": "Drop your images, pick one or more formats, and convert — no fuss."
       },
       "fast": {
         "label": "Fast",
@@ -25,21 +25,23 @@
     }
   },
   "formatSelector": {
-    "title": "Target format",
-    "description": "Select the format your images will be converted to."
+    "title": "Target formats",
+    "description": "Select one or more output formats. Click again to deselect."
   },
   "dropzone": {
     "title": "Source images",
     "description": "Drag files or click to select. Accepted formats: {{formats}}.",
     "clickToUpload": "Click to upload",
     "orDragHere": "or drag images here",
-    "multipleHint": "You can add multiple files at once"
+    "multipleHint": "You can add multiple files at once",
+    "privacy": "No data is sent to servers. All conversion happens locally in your browser."
   },
   "files": {
     "title": "Files ({{count}})",
     "clearAll": "Clear all",
     "download": "Download",
     "downloadItem": "Download {{name}}",
+    "downloadFormat": "Download {{name}} as {{format}}",
     "remove": "Remove {{name}}",
     "status": {
       "loading": "Loading image",
@@ -57,19 +59,20 @@
     "downloadAllZip": "Download all (ZIP)"
   },
   "footer": {
-    "privacy": "No data is sent to servers. All conversion happens locally in your browser."
+    "reportBugPrefix": "Found a bug?",
+    "reportBugLink": "Report it on GitHub"
   },
   "errors": {
     "unsupportedFiles": "Some files were ignored because they are not a supported format.",
     "unknown": "Unknown error.",
     "canvasContext": "Could not create canvas context.",
-    "avifUnsupported": "Your browser does not support AVIF conversion. Try another format or update your browser.",
+    "avifUnsupported": "Your browser does not support AVIF conversion. Try other formats or update your browser.",
     "conversionFailed": "Failed to convert the image.",
     "heicDecodeFailed": "Could not read the HEIC file. Try another browser or convert the file before uploading.",
     "previewFailed": "Could not load the image preview."
   },
   "download": {
-    "zipFilename": "converted-images.{{extension}}.zip"
+    "zipFilename": "converted-images.zip"
   },
   "language": {
     "label": "Language",

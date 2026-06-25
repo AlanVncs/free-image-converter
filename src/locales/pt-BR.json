@@ -8,7 +8,7 @@
     "features": {
       "simple": {
         "label": "Simples",
-        "hint": "Arraste as imagens, escolha o formato e converta — sem complicação."
+        "hint": "Arraste as imagens, escolha um ou mais formatos e converta — sem complicação."
       },
       "fast": {
         "label": "Rápido",
@@ -25,21 +25,23 @@
     }
   },
   "formatSelector": {
-    "title": "Formato de destino",
-    "description": "Selecione o formato para o qual suas imagens serão convertidas."
+    "title": "Formatos de destino",
+    "description": "Selecione um ou mais formatos de saída. Clique novamente para desmarcar."
   },
   "dropzone": {
     "title": "Imagens de origem",
     "description": "Arraste arquivos ou clique para selecionar. Formatos aceitos: {{formats}}.",
     "clickToUpload": "Clique para enviar",
     "orDragHere": "ou arraste imagens aqui",
-    "multipleHint": "Você pode adicionar vários arquivos de uma vez"
+    "multipleHint": "Você pode adicionar vários arquivos de uma vez",
+    "privacy": "Nenhum dado é enviado a servidores. Toda a conversão ocorre localmente no seu navegador."
   },
   "files": {
     "title": "Arquivos ({{count}})",
     "clearAll": "Limpar tudo",
     "download": "Baixar",
     "downloadItem": "Baixar {{name}}",
+    "downloadFormat": "Baixar {{name}} como {{format}}",
     "remove": "Remover {{name}}",
     "status": {
       "loading": "Carregando imagem",
@@ -57,19 +59,20 @@
     "downloadAllZip": "Baixar todos (ZIP)"
   },
   "footer": {
-    "privacy": "Nenhum dado é enviado a servidores. Toda a conversão ocorre localmente no seu navegador."
+    "reportBugPrefix": "Encontrou um bug?",
+    "reportBugLink": "Reporte no GitHub"
   },
   "errors": {
     "unsupportedFiles": "Alguns arquivos foram ignorados por não serem um formato suportado.",
     "unknown": "Erro desconhecido.",
     "canvasContext": "Não foi possível criar o contexto do canvas.",
-    "avifUnsupported": "Seu navegador não suporta conversão para AVIF. Tente outro formato ou atualize o navegador.",
+    "avifUnsupported": "Seu navegador não suporta conversão para AVIF. Tente outros formatos ou atualize o navegador.",
     "conversionFailed": "Falha ao converter a imagem.",
     "heicDecodeFailed": "Não foi possível ler o arquivo HEIC. Tente outro navegador ou converta o arquivo antes de enviar.",
     "previewFailed": "Não foi possível carregar a pré-visualização da imagem."
   },
   "download": {
-    "zipFilename": "imagens-convertidas.{{extension}}.zip"
+    "zipFilename": "imagens-convertidas.zip"
   },
   "language": {
     "label": "Idioma",

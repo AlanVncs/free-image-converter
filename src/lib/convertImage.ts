@@ -1,9 +1,26 @@
 import i18n from '../i18n'
 import { loadImageBitmap } from './decodeImage'
 import { encodeCanvas } from './encodeImage'
-import type { OutputFormat } from '../types/image'
+import type { ConvertedOutputs, OutputFormat } from '../types/image'
 
-export async function convertImage(file: File, targetFormat: OutputFormat): Promise<Blob> {
+function mapEncodeError(err: unknown): string {
+  if (err instanceof Error) {
+    if (err.message === 'avif-unsupported') return i18n.t('errors.avifUnsupported')
+    if (err.message === 'conversion-failed') return i18n.t('errors.conversionFailed')
+    return err.message
+  }
+  return i18n.t('errors.unknown')
+}
+
+export type ConversionResult = {
+  outputs: ConvertedOutputs
+  errors: Partial<Record<OutputFormat, string>>
+}
+
+export async function convertImageToFormats(
+  file: File,
+  targetFormats: OutputFormat[],
+): Promise<ConversionResult> {
   const bitmap = await loadImageBitmap(file)
 
   try {
@@ -16,19 +33,18 @@ export async function convertImage(file: File, targetFormat: OutputFormat): Prom
 
     ctx.drawImage(bitmap, 0, 0)
 
-    try {
-      return await encodeCanvas(canvas, targetFormat)
-    } catch (err) {
-      if (err instanceof Error) {
-        if (err.message === 'avif-unsupported') {
-          throw new Error(i18n.t('errors.avifUnsupported'))
-        }
-        if (err.message === 'conversion-failed') {
-          throw new Error(i18n.t('errors.conversionFailed'))
-        }
+    const outputs: ConvertedOutputs = {}
+    const errors: Partial<Record<OutputFormat, string>> = {}
+
+    for (const targetFormat of targetFormats) {
+      try {
+        outputs[targetFormat] = await encodeCanvas(canvas, targetFormat)
+      } catch (err) {
+        errors[targetFormat] = mapEncodeError(err)
       }
-      throw err
     }
+
+    return { outputs, errors }
   } finally {
     bitmap.close()
   }

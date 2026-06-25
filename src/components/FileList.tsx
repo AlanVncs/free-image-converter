@@ -1,15 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Download, Loader2, X } from 'lucide-react'
-import type { ImageFile, ImageFileStatus } from '../types/image'
+import type { ImageFile, ImageFileStatus, OutputFormat } from '../types/image'
 import { getFormatById } from '../lib/formats'
-import type { OutputFormat } from '../types/image'
 import { downloadBlob } from '../lib/downloadFiles'
 import { replaceExtension } from '../lib/formats'
 import { cn } from '../lib/utils'
 
 type FileListProps = {
   files: ImageFile[]
-  targetFormat: OutputFormat
   onRemove: (id: string) => void
   onClear: () => void
 }
@@ -67,16 +65,21 @@ function FilePreview({ item }: { item: ImageFile }) {
   )
 }
 
-export function FileList({ files, targetFormat, onRemove, onClear }: FileListProps) {
+function getConvertedSize(outputs: ImageFile['convertedOutputs']): number {
+  if (!outputs) return 0
+  return Object.values(outputs).reduce((sum, blob) => sum + blob.size, 0)
+}
+
+export function FileList({ files, onRemove, onClear }: FileListProps) {
   const { t } = useTranslation()
 
   if (files.length === 0) return null
 
-  const extension = getFormatById(targetFormat).extension
-
-  const handleDownload = (item: ImageFile) => {
-    if (!item.convertedBlob) return
-    downloadBlob(item.convertedBlob, replaceExtension(item.file.name, extension))
+  const handleDownload = (item: ImageFile, format: OutputFormat) => {
+    const blob = item.convertedOutputs?.[format]
+    if (!blob) return
+    const extension = getFormatById(format).extension
+    downloadBlob(blob, replaceExtension(item.file.name, extension))
   }
 
   return (
@@ -97,57 +100,72 @@ export function FileList({ files, targetFormat, onRemove, onClear }: FileListPro
       </div>
 
       <ul className="space-y-3">
-        {files.map((item) => (
-          <li
-            key={item.id}
-            className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-50/80 p-3 sm:gap-4 dark:border-zinc-800 dark:bg-zinc-800/40"
-          >
-            <FilePreview item={item} />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                {item.file.name}
-              </p>
-              <p className="text-xs text-zinc-500">
-                {formatBytes(item.file.size)}
-                {item.convertedBlob && (
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    {' '}
-                    → {formatBytes(item.convertedBlob.size)}
-                  </span>
+        {files.map((item) => {
+          const convertedEntries = Object.entries(item.convertedOutputs ?? {}) as [
+            OutputFormat,
+            Blob,
+          ][]
+
+          return (
+            <li
+              key={item.id}
+              className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-zinc-50/80 p-3 sm:gap-4 dark:border-zinc-800 dark:bg-zinc-800/40"
+            >
+              <FilePreview item={item} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                  {item.file.name}
+                </p>
+                <p className="text-xs text-zinc-500">
+                  {formatBytes(item.file.size)}
+                  {convertedEntries.length > 0 && (
+                    <span className="text-emerald-600 dark:text-emerald-400">
+                      {' '}
+                      → {formatBytes(getConvertedSize(item.convertedOutputs))}
+                    </span>
+                  )}
+                </p>
+                <div className="mt-1.5 sm:hidden">
+                  <StatusBadge status={item.status} error={item.error} />
+                </div>
+                {item.error && (
+                  <p className="mt-1 text-xs text-red-600 dark:text-red-400">{item.error}</p>
                 )}
-              </p>
-              <div className="mt-1.5 sm:hidden">
+              </div>
+              <div className="hidden shrink-0 sm:block">
                 <StatusBadge status={item.status} error={item.error} />
               </div>
-              {item.error && (
-                <p className="mt-1 text-xs text-red-600 dark:text-red-400">{item.error}</p>
+              {item.status === 'done' && convertedEntries.length > 0 && (
+                <div className="flex shrink-0 flex-wrap justify-end gap-1.5">
+                  {convertedEntries.map(([format]) => (
+                    <button
+                      key={format}
+                      type="button"
+                      onClick={() => handleDownload(item, format)}
+                      className="inline-flex items-center gap-1 rounded-lg bg-violet-600 px-2 py-1.5 text-xs font-medium text-white transition-colors hover:bg-violet-500"
+                      aria-label={t('files.downloadFormat', {
+                        name: item.file.name,
+                        format: getFormatById(format).label,
+                      })}
+                    >
+                      <Download className="h-3 w-3" strokeWidth={2.5} />
+                      {getFormatById(format).label}
+                    </button>
+                  ))}
+                </div>
               )}
-            </div>
-            <div className="hidden shrink-0 sm:block">
-              <StatusBadge status={item.status} error={item.error} />
-            </div>
-            {item.status === 'done' && item.convertedBlob && (
               <button
                 type="button"
-                onClick={() => handleDownload(item)}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-violet-500"
-                aria-label={t('files.downloadItem', { name: item.file.name })}
+                onClick={() => onRemove(item.id)}
+                disabled={item.status === 'loading' || item.status === 'converting'}
+                className="shrink-0 rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
+                aria-label={t('files.remove', { name: item.file.name })}
               >
-                <Download className="h-3.5 w-3.5" strokeWidth={2.5} />
-                <span className="hidden sm:inline">{t('files.download')}</span>
+                <X className="h-4 w-4" strokeWidth={2} />
               </button>
-            )}
-            <button
-              type="button"
-              onClick={() => onRemove(item.id)}
-              disabled={item.status === 'loading' || item.status === 'converting'}
-              className="shrink-0 rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-800 disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
-              aria-label={t('files.remove', { name: item.file.name })}
-            >
-              <X className="h-4 w-4" strokeWidth={2} />
-            </button>
-          </li>
-        ))}
+            </li>
+          )
+        })}
       </ul>
     </section>
   )

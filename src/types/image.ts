@@ -4,11 +4,13 @@ export type InputFormat = OutputFormat | 'svg' | 'heic'
 
 export type ImageFileStatus = 'loading' | 'ready' | 'converting' | 'done' | 'error'
 
+export type ConvertedOutputs = Partial<Record<OutputFormat, Blob>>
+
 export type ImageFile = {
   id: string
   file: File
   previewUrl: string
   status: ImageFileStatus
-  convertedBlob?: Blob
+  convertedOutputs?: ConvertedOutputs
   error?: string
 }

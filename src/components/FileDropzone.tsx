@@ -89,6 +89,9 @@ export function FileDropzone({ onFilesAdded, disabled, acceptedFormats }: FileDr
           {t('dropzone.orDragHere')}
         </p>
         <p className="mt-2 text-xs text-zinc-500">{t('dropzone.multipleHint')}</p>
+        <p className="mt-4 max-w-sm text-center text-xs text-zinc-500 dark:text-zinc-500">
+          {t('dropzone.privacy')}
+        </p>
       </div>
 
       <input
